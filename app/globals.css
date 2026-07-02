@@ -151,3 +151,7 @@ a{text-decoration:none;color:inherit;}
 .fnstatus.plan .fnstatus-badge{background:#eef2ff;color:var(--indigo);}
 .fnstatus p{font-size:13px;color:#334155;margin-bottom:6px;line-height:1.55;}
 .fnstatus-hint{font-size:12px;color:var(--g500);}
+.btn.go{background:var(--green);color:#fff;} .btn.go:hover{background:#15803d;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+.spaceinput{width:84px;border:1px solid var(--g200);border-radius:8px;padding:8px 10px;font-size:13px;}
+.privlabel{font-size:12px;color:var(--g500);font-weight:600;align-self:center;}
