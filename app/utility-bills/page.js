@@ -3,6 +3,7 @@ import { UserButton } from '@clerk/nextjs';
 import { getAllowedUser } from '@/lib/user';
 import { getReconciliation } from '@/lib/engine';
 import { recentEvents } from '@/lib/audit';
+import { FUNCTIONS } from '@/lib/functions';
 import ActionsClient from './ActionsClient';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -45,6 +46,7 @@ export default async function UtilityBillsPage() {
         <div className="ub-title">
           <h1>Summit Utility Bills</h1>
           <span className="tag monthly">MONTHLY</span>
+          <a className="howto" href={FUNCTIONS['utility-bills'].howItWorksUrl} target="_blank" rel="noreferrer">📄 How it works</a>
         </div>
 
         {!recon.available ? (
@@ -118,6 +120,12 @@ export default async function UtilityBillsPage() {
                 </table>
               )}
               {history.corrupt > 0 ? <div className="hist-warn">⚠ {history.corrupt} audit line(s) were unreadable.</div> : null}
+            </div>
+
+            <div className="section-h"><h2>Downloads</h2><span className="line"></span></div>
+            <div className="downloads">
+              <a className="dl" href="/api/utility-bills/download?file=reconciliation">⬇ Reconciliation (CSV)</a>
+              <a className="dl" href="/api/utility-bills/download?file=control-totals">⬇ Control totals (JSON)</a>
             </div>
           </>
         )}
