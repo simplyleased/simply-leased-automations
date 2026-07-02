@@ -2,15 +2,33 @@ import { redirect } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { getAllowedUser } from '@/lib/user';
 import { getReconciliation } from '@/lib/engine';
+import { recentEvents } from '@/lib/audit';
 import ActionsClient from './ActionsClient';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const ACTION_LABELS = {
+  'utility_bills.run_reconcile': 'Ran reconciliation',
+  'utility_bills.run_reconcile_failed': 'Reconciliation failed',
+  'utility_bills.create_review_sheet': 'Created review sheet',
+  'utility_bills.create_review_sheet_failed': 'Create sheet failed',
+};
+const prettyAction = (a) => ACTION_LABELS[a] || a;
+const fmtTime = (ts) => { try { return new Date(ts).toLocaleString('en-US'); } catch { return ts; } };
+function summarizeDetails(e) {
+  const d = e.details || {};
+  if (e.action?.includes('create_review_sheet') && d.rows != null) return `${d.rows} rows`;
+  if (e.action?.includes('run_reconcile') && d.okCount != null) return `${d.okCount} ready`;
+  return '';
+}
 
 export default async function UtilityBillsPage() {
   const user = await getAllowedUser();
   if (!user) redirect('/');
 
   const recon = getReconciliation();
+  const history = recentEvents(200);
+  const events = history.events.filter((e) => (e.action || '').startsWith('utility_bills')).slice(0, 20);
 
   return (
     <>
@@ -78,6 +96,28 @@ export default async function UtilityBillsPage() {
                 </tbody>
               </table>
               <div className="sheetprev-foot">Showing 15 of {recon.summary.totalRows} rows &middot; full data goes into the Google Sheet.</div>
+            </div>
+
+            <div className="section-h"><h2>Run history</h2><span className="line"></span></div>
+            <div className="history">
+              {events.length === 0 ? (
+                <div className="hist-empty">No activity yet. Actions here (run reconciliation, create sheet) are recorded with your name and time.</div>
+              ) : (
+                <table>
+                  <thead><tr><th>When</th><th>Who</th><th>Action</th><th>Details</th></tr></thead>
+                  <tbody>
+                    {events.map((e, i) => (
+                      <tr key={i}>
+                        <td>{fmtTime(e.ts)}</td>
+                        <td>{e.email || '—'}</td>
+                        <td>{prettyAction(e.action)}</td>
+                        <td className="hist-detail">{summarizeDetails(e)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {history.corrupt > 0 ? <div className="hist-warn">⚠ {history.corrupt} audit line(s) were unreadable.</div> : null}
             </div>
           </>
         )}

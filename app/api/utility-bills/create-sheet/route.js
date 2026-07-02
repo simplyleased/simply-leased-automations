@@ -23,12 +23,12 @@ export async function POST() {
 
     const sheet = await createReviewSheet(title, header, rows);
 
-    logEvent(user, 'utility_bills.create_review_sheet', {
+    const audited = logEvent(user, 'utility_bills.create_review_sheet', {
       month: recon.summary.month, rows: rows.length,
       spreadsheetId: sheet.spreadsheetId, url: sheet.url, owner: sheet.owner,
     });
 
-    return NextResponse.json({ url: sheet.url, owner: sheet.owner, rows: rows.length });
+    return NextResponse.json({ url: sheet.url, owner: sheet.owner, rows: rows.length, audited });
   } catch (e) {
     const msg = String((e && e.message) || e);
     logEvent(user, 'utility_bills.create_review_sheet_failed', { error: msg });

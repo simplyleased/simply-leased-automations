@@ -1,19 +1,10 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
-import { auth, currentUser } from '@clerk/nextjs/server';
-import { ALLOWED_DOMAINS } from '@/lib/user';
+import { getUserState } from '@/lib/user';
 
 export default async function Home() {
-  const { userId } = await auth();
-  if (!userId) return <LoginScreen />;
-
-  const user = await currentUser();
-  const email =
-    user?.primaryEmailAddress?.emailAddress ||
-    user?.emailAddresses?.[0]?.emailAddress ||
-    '';
-  const domain = email.split('@')[1]?.toLowerCase();
-  if (!ALLOWED_DOMAINS.includes(domain)) return <DeniedScreen email={email} />;
-
+  const s = await getUserState();
+  if (s.state === 'anon') return <LoginScreen />;
+  if (s.state === 'denied') return <DeniedScreen email={s.email} />;
   return <Dashboard />;
 }
 
