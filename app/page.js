@@ -88,15 +88,15 @@ function Dashboard() {
 
         <div className="section-h"><h2>All automations</h2><span className="line"></span></div>
         <div className="grid">
-          <a className="card" href="#"><div className="ic">&#9993;&#65039;</div><h3>Auto-responder</h3>
+          <a className="card" href="/auto-responder"><div className="ic">&#9993;&#65039;</div><h3>Auto-responder</h3>
             <p>Drafts and sends replies to routine tenant &amp; applicant emails from your knowledgebase.</p>
             <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot ok"></span> Healthy</span></div></a>
 
-          <a className="card" href="#"><div className="ic">&#128218;</div><h3>Knowledgebase</h3>
+          <a className="card" href="/knowledgebase"><div className="ic">&#128218;</div><h3>Knowledgebase</h3>
             <p>The source of truth the bots answer from. Auto-refreshes every night so nothing goes stale.</p>
             <div className="foot"><span className="tag daily">DAILY REFRESH</span><span className="mini"><span className="dot ok"></span> Synced 3:00 AM</span></div></a>
 
-          <a className="card" href="#"><div className="ic">&#128269;</div><h3>Summit Scan Checks</h3>
+          <a className="card" href="/summit-scan-checks"><div className="ic">&#128269;</div><h3>Summit Scan Checks</h3>
             <p>Scans Summit records for issues and flags anything that needs a human&rsquo;s eyes.</p>
             <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot warn"></span> 2 to review</span></div></a>
 
@@ -104,15 +104,15 @@ function Dashboard() {
             <p>Turns VCS&rsquo;s 4 monthly PDFs into reconciled electric &amp; water charges &mdash; with your review gate.</p>
             <div className="foot"><span className="tag monthly">MONTHLY</span><span className="open">Open &rarr;</span></div></a>
 
-          <a className="card" href="#"><div className="ic">&#128196;</div><h3>Summit Upload Statements</h3>
+          <a className="card" href="/upload-statements"><div className="ic">&#128196;</div><h3>Summit Upload Statements</h3>
             <p>Files each resident&rsquo;s statement into their AppFolio folder and shares it with the tenants.</p>
             <div className="foot"><span className="tag monthly">MONTHLY</span><span className="mini"><span className="dot ok"></span> Ran Jun 16</span></div></a>
 
-          <a className="card" href="#"><div className="ic">&#128203;</div><h3>Application Daily Review</h3>
+          <a className="card" href="/application-review"><div className="ic">&#128203;</div><h3>Application Daily Review</h3>
             <p>Reviews new rental applications each morning and summarizes decisions and follow-ups.</p>
             <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot ok"></span> Healthy</span></div></a>
 
-          <a className="card" href="#"><div className="ic">&#129302;</div><h3>Browser (Ad-hoc)</h3>
+          <a className="card" href="/browser"><div className="ic">&#129302;</div><h3>Browser (Ad-hoc)</h3>
             <p>Give it any one-off task &mdash; like filling out the THP &mdash; and it finds options and does it.</p>
             <div className="foot"><span className="tag ondemand">ON-DEMAND</span><span className="open">Start a task &rarr;</span></div></a>
         </div>
