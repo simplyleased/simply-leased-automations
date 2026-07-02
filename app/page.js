@@ -1,8 +1,6 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
 import { auth, currentUser } from '@clerk/nextjs/server';
-
-// Only these email domains may use the portal.
-const ALLOWED_DOMAINS = ['version.so', 'simply-leased.com'];
+import { ALLOWED_DOMAINS } from '@/lib/user';
 
 export default async function Home() {
   const { userId } = await auth();
@@ -111,7 +109,7 @@ function Dashboard() {
             <p>Scans Summit records for issues and flags anything that needs a human&rsquo;s eyes.</p>
             <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot warn"></span> 2 to review</span></div></a>
 
-          <a className="card featured" href="#"><div className="ic">&#9889;</div><h3>Summit Utility Bills</h3>
+          <a className="card featured" href="/utility-bills"><div className="ic">&#9889;</div><h3>Summit Utility Bills</h3>
             <p>Turns VCS&rsquo;s 4 monthly PDFs into reconciled electric &amp; water charges &mdash; with your review gate.</p>
             <div className="foot"><span className="tag monthly">MONTHLY</span><span className="open">Open &rarr;</span></div></a>
 
