@@ -1,9 +1,22 @@
-import { SignInButton, UserButton } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
+import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
+import { auth, currentUser } from '@clerk/nextjs/server';
+
+// Only these email domains may use the portal.
+const ALLOWED_DOMAINS = ['version.so', 'simply-leased.com'];
 
 export default async function Home() {
   const { userId } = await auth();
-  return userId ? <Dashboard /> : <LoginScreen />;
+  if (!userId) return <LoginScreen />;
+
+  const user = await currentUser();
+  const email =
+    user?.primaryEmailAddress?.emailAddress ||
+    user?.emailAddresses?.[0]?.emailAddress ||
+    '';
+  const domain = email.split('@')[1]?.toLowerCase();
+  if (!ALLOWED_DOMAINS.includes(domain)) return <DeniedScreen email={email} />;
+
+  return <Dashboard />;
 }
 
 function LoginScreen() {
@@ -17,6 +30,24 @@ function LoginScreen() {
           <button className="btn google">Continue with Google</button>
         </SignInButton>
         <div className="login-note">Sign-in is restricted to @version.so and @simply-leased.com accounts.</div>
+      </div>
+    </div>
+  );
+}
+
+function DeniedScreen({ email }) {
+  return (
+    <div className="login-wrap">
+      <div className="login-card">
+        <div className="login-logo">◧</div>
+        <h1>Access restricted</h1>
+        <p>
+          {email ? <><b>{email}</b> isn&rsquo;t permitted. </> : null}
+          Only <b>@version.so</b> and <b>@simply-leased.com</b> accounts can use this portal.
+        </p>
+        <SignOutButton>
+          <button className="btn google">Sign out</button>
+        </SignOutButton>
       </div>
     </div>
   );
