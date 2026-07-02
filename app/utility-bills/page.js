@@ -5,6 +5,7 @@ import { getReconciliation } from '@/lib/engine';
 import { recentEvents } from '@/lib/audit';
 import { FUNCTIONS } from '@/lib/functions';
 import ActionsClient from './ActionsClient';
+import PreviewTable from './PreviewTable';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -83,22 +84,7 @@ export default async function UtilityBillsPage() {
             <ActionsClient available={recon.available} />
 
             <div className="section-h"><h2>Reconciliation — preview</h2><span className="line"></span></div>
-            <div className="sheetprev">
-              <table>
-                <thead><tr><th>Unit</th><th>Resident</th><th className="num">Electric</th><th className="num">Water</th><th>Service start</th><th>Service end</th><th>Charge date</th><th>Status</th></tr></thead>
-                <tbody>
-                  {recon.rows.slice(0, 15).map((r, i) => (
-                    <tr key={i}>
-                      <td>{r.unit}</td><td>{r.resident}</td>
-                      <td className="num">{usd(r.electric)}</td><td className="num">{usd(r.water)}</td>
-                      <td>{r.serviceStart}</td><td>{r.serviceEnd}</td><td>{r.chargeDate}</td>
-                      <td><span className={/^ok$/i.test(r.status) ? 'sst ok' : 'sst flag'}>{r.status}</span></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="sheetprev-foot">Showing 15 of {recon.summary.totalRows} rows &middot; full data goes into the Google Sheet.</div>
-            </div>
+            <PreviewTable rows={recon.rows} total={recon.summary.totalRows} />
 
             <div className="section-h"><h2>Run history</h2><span className="line"></span></div>
             <div className="history">
