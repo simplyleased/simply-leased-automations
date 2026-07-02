@@ -6,6 +6,7 @@ import { recentEvents } from '@/lib/audit';
 import { FUNCTIONS } from '@/lib/functions';
 import ActionsClient from './ActionsClient';
 import PreviewTable from './PreviewTable';
+import InputsClient from './InputsClient';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -62,7 +63,11 @@ export default async function UtilityBillsPage() {
               Current reconciliation: <b>{recon.summary.month || recon.csvFile}</b> &middot; source file <code>{recon.csvFile}</code>
             </div>
 
-            <div className="section-h"><h2>Review the reconciliation</h2><span className="line"></span></div>
+            <div className="section-h"><h2>1 &middot; Provide this month&rsquo;s statements</h2><span className="line"></span></div>
+            <p className="hint">Upload the VCS PDFs — the system extracts and reconciles them, then you review below. Statements, Monthly Report, and Collection Report are required; Meter Reads is optional.</p>
+            <InputsClient />
+
+            <div className="section-h"><h2>2 &middot; Review the reconciliation</h2><span className="line"></span></div>
 
             <div className="ub-stats">
               <div className="sbox ok"><div className="big">{recon.summary.okCount}</div><div className="cap">Ready to charge</div></div>

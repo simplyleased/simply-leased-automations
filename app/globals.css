@@ -140,3 +140,7 @@ a{text-decoration:none;color:inherit;}
 .dl:hover{border-color:var(--indigo);color:var(--indigo);}
 .linkbtn{background:none;border:none;color:var(--indigo);font-weight:600;font-size:12px;cursor:pointer;margin-left:12px;padding:0;}
 .linkbtn:hover{text-decoration:underline;}
+.uploads{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px;}
+.uploadslot{display:flex;flex-direction:column;gap:6px;border:1px solid var(--g200);border-radius:10px;padding:11px 13px;font-size:12.5px;background:#fff;}
+.uploadslot span{font-weight:600;color:#334155;}
+.uploadslot input{font-size:12px;}
