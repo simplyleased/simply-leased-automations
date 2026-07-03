@@ -26,7 +26,7 @@ export default async function Page() {
         <p className="sub2">{fn.blurb}</p>
 
         <div className="section-h"><h2>Describe a task</h2><span className="line"></span></div>
-        <p className="hint">Right now it <b>plans</b> the task for you — the goal, options, steps, and what's needed. Actually carrying it out automatically is the next step. Anything touching money still needs Glen or Christian.</p>
+        <p className="hint"><b>Plan it</b> sketches the goal, options, and steps. <b>Run live</b> carries the task out in the office machine&rsquo;s browser, showing each step as it goes. It will never do money actions (charges, vendors, payouts) or anything irreversible — those are always left for Glen or Christian.</p>
         <BrowserClient />
       </div>
     </>

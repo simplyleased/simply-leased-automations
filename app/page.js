@@ -1,7 +1,7 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
 import { getUserState, canManageFinancials } from '@/lib/user';
 import SystemStatus from '@/app/_components/SystemStatus';
-import { recentRuns } from '@/lib/runs';
+import { recentRuns, lastRunBySlug } from '@/lib/runs';
 
 export default async function Home() {
   const s = await getUserState();
@@ -46,6 +46,18 @@ function DeniedScreen({ email }) {
 
 function Dashboard({ privileged }) {
   const runs = recentRuns();
+  const last = lastRunBySlug();
+  const ranOn = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  // Honest per-card status from the audit log — never a fake "Healthy".
+  const mini = (slug) => {
+    const r = last[slug];
+    if (!r) return <span className="mini">Not run yet</span>;
+    return (
+      <span className="mini">
+        <span className={`dot ${r.state}`}></span> {r.state === 'err' ? 'Last run failed' : `Ran ${ranOn(r.ts)}`}
+      </span>
+    );
+  };
   return (
     <>
       <div className="topbar">
@@ -88,15 +100,15 @@ function Dashboard({ privileged }) {
         <div className="grid">
           <a className="card" href="/auto-responder"><div className="ic">&#9993;&#65039;</div><h3>Auto-responder</h3>
             <p>Drafts and sends replies to routine tenant &amp; applicant emails from your knowledgebase.</p>
-            <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot ok"></span> Healthy</span></div></a>
+            <div className="foot"><span className="tag daily">DAILY</span>{mini('auto-responder')}</div></a>
 
           <a className="card" href="/knowledgebase"><div className="ic">&#128218;</div><h3>Knowledgebase</h3>
             <p>The source of truth the bots answer from. Auto-refreshes every night so nothing goes stale.</p>
-            <div className="foot"><span className="tag daily">DAILY REFRESH</span><span className="mini"><span className="dot ok"></span> Synced 3:00 AM</span></div></a>
+            <div className="foot"><span className="tag daily">DAILY REFRESH</span><span className="mini"><span className="dot ok"></span> Refreshes nightly</span></div></a>
 
           <a className="card" href="/summit-scan-checks"><div className="ic">&#128269;</div><h3>Summit Scan Checks</h3>
             <p>Scans Summit records for issues and flags anything that needs a human&rsquo;s eyes.</p>
-            <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot warn"></span> 2 to review</span></div></a>
+            <div className="foot"><span className="tag daily">DAILY</span>{mini('summit-scan-checks')}</div></a>
 
           <a className="card featured" href="/utility-bills"><div className="ic">&#9889;</div><h3>Summit Utility Bills</h3>
             <p>Turns VCS&rsquo;s 4 monthly PDFs into reconciled electric &amp; water charges &mdash; with your review gate.</p>
@@ -104,15 +116,19 @@ function Dashboard({ privileged }) {
 
           <a className="card" href="/upload-statements"><div className="ic">&#128196;</div><h3>Summit Upload Statements</h3>
             <p>Files each resident&rsquo;s statement into their AppFolio folder and shares it with the tenants.</p>
-            <div className="foot"><span className="tag monthly">MONTHLY</span><span className="mini"><span className="dot ok"></span> Ran Jun 16</span></div></a>
-
-          <a className="card" href="/application-review"><div className="ic">&#128203;</div><h3>Application Daily Review</h3>
-            <p>Reviews new rental applications each morning and summarizes decisions and follow-ups.</p>
-            <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot ok"></span> Healthy</span></div></a>
+            <div className="foot"><span className="tag monthly">MONTHLY</span>{mini('upload-statements')}</div></a>
 
           <a className="card" href="/browser"><div className="ic">&#129302;</div><h3>Browser (Ad-hoc)</h3>
-            <p>Give it any one-off task &mdash; like filling out the THP &mdash; and it finds options and does it.</p>
+            <p>Give it any one-off task &mdash; like filling out the THP &mdash; and it runs it in a live browser while you watch.</p>
             <div className="foot"><span className="tag ondemand">ON-DEMAND</span><span className="open">Start a task &rarr;</span></div></a>
+        </div>
+
+        <div className="section-h"><h2>Roadmap</h2><span className="line"></span></div>
+        <p className="hint">Not live yet — in development. It&rsquo;ll move up to the automations above once it&rsquo;s ready.</p>
+        <div className="grid">
+          <div className="card soon"><div className="ic">&#128203;</div><h3>Application Daily Review</h3>
+            <p>Reviews new rental applications each morning and summarizes decisions and follow-ups.</p>
+            <div className="foot"><span className="tag daily">DAILY</span><span className="mini"><span className="dot warn"></span> Beta &mdash; in development</span></div></div>
         </div>
       </div>
     </>
