@@ -3,6 +3,7 @@ import { FUNCTIONS, cadenceClass } from '@/lib/functions';
 
 const STATUS = {
   live: { label: 'Live', cls: 'ok' },
+  beta: { label: 'Beta', cls: 'warn' },
   wiring: { label: 'Being wired up', cls: 'warn' },
   planned: { label: 'Being set up', cls: 'plan' },
 };
