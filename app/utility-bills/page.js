@@ -1,12 +1,13 @@
 import { redirect } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
-import { getAllowedUser } from '@/lib/user';
+import { getAllowedUser, canManageFinancials } from '@/lib/user';
 import { getReconciliation } from '@/lib/engine';
 import { recentEvents } from '@/lib/audit';
 import { FUNCTIONS } from '@/lib/functions';
 import ActionsClient from './ActionsClient';
 import PreviewTable from './PreviewTable';
 import InputsClient from './InputsClient';
+import ChargeClient from './ChargeClient';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -28,6 +29,7 @@ function summarizeDetails(e) {
 export default async function UtilityBillsPage() {
   const user = await getAllowedUser();
   if (!user) redirect('/');
+  const privileged = canManageFinancials(user);
 
   const recon = getReconciliation();
   const history = recentEvents(200);
@@ -87,6 +89,10 @@ export default async function UtilityBillsPage() {
             <div className="section-h"><h2>Generate the review sheet</h2><span className="line"></span></div>
             <p className="hint">Creates a Google Sheet of every unit for you to approve <b>before any charge is posted</b>. Nothing is charged from this screen yet — that's the next build step, and it stays gated behind your approval.</p>
             <ActionsClient available={recon.available} />
+
+            <div className="section-h"><h2>3 &middot; Post charges</h2><span className="line"></span></div>
+            <p className="hint">Dry-run first (posts nothing). When the review sheet is approved, Glen or Christian post the charges live. The bot is idempotent — already-posted charges are skipped, so it's safe to re-run.</p>
+            <ChargeClient privileged={privileged} />
 
             <div className="section-h"><h2>Reconciliation — preview</h2><span className="line"></span></div>
             <PreviewTable rows={recon.rows} total={recon.summary.totalRows} />

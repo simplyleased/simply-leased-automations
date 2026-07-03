@@ -24,7 +24,7 @@ export async function POST() {
     return NextResponse.json({ url: sheet.url, count: scan.findings.length, audited });
   } catch (e) {
     const msg = String((e && e.message) || e);
-    logEvent(user, 'scan_checks.export_failed', { error: msg });
-    return NextResponse.json({ error: msg }, { status: 500 });
+    logEvent(user, 'scan_checks.export_failed', { error: msg }); // detail stays server-side
+    return NextResponse.json({ error: 'Could not export the scan results.' }, { status: 500 });
   }
 }
