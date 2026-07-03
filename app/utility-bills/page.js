@@ -8,6 +8,7 @@ import ActionsClient from './ActionsClient';
 import PreviewTable from './PreviewTable';
 import InputsClient from './InputsClient';
 import ChargeClient from './ChargeClient';
+import ChargeDateClient from './ChargeDateClient';
 
 const usd = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -89,6 +90,10 @@ export default async function UtilityBillsPage() {
             <div className="section-h"><h2>Generate the review sheet</h2><span className="line"></span></div>
             <p className="hint">Creates a Google Sheet of every unit for you to approve <b>before any charge is posted</b>. Nothing is charged from this screen yet — that's the next build step, and it stays gated behind your approval.</p>
             <ActionsClient available={recon.available} />
+
+            <div className="section-h"><h2>Charge date</h2><span className="line"></span></div>
+            <p className="hint">The charge bot posts on this date. Reconcile defaults to the 1st of the month after the billing label — <b>confirm or override it</b> before posting. Currently: <b>{recon.rows[0]?.chargeDate || '—'}</b></p>
+            <ChargeDateClient current={recon.rows[0]?.chargeDate} />
 
             <div className="section-h"><h2>3 &middot; Post charges</h2><span className="line"></span></div>
             <p className="hint">Dry-run first (posts nothing). When the review sheet is approved, Glen or Christian post the charges live. The bot is idempotent — already-posted charges are skipped, so it's safe to re-run.</p>
