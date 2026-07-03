@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { getAllowedUser } from '@/lib/user';
 import { FUNCTIONS, cadenceClass } from '@/lib/functions';
-import { knowledgeAvailable, knowledgeStats } from '@/lib/knowledge';
+import { knowledgeAvailable, knowledgeStats, listSources } from '@/lib/knowledge';
 import KnowledgebaseClient from './KnowledgebaseClient';
 
 export default async function Page() {
@@ -10,6 +10,7 @@ export default async function Page() {
   if (!user) redirect('/');
   const fn = FUNCTIONS['knowledgebase'];
   const kb = knowledgeAvailable() ? knowledgeStats() : null;
+  const sources = kb ? listSources() : [];
 
   return (
     <>
@@ -31,7 +32,7 @@ export default async function Page() {
         <p className="hint">{kb
           ? `Answers come from all your exported text conversations — ${kb.fileCount} property notebooks, ${kb.chunkCount.toLocaleString()} searchable sections. It cites its sources and points you to Glen or Christian for anything sensitive.`
           : 'Conversation data isn’t on this machine, so answers fall back to a small set of saved facts. Run the portal on the office machine for the full conversation knowledgebase.'}</p>
-        <KnowledgebaseClient />
+        <KnowledgebaseClient sources={sources} />
       </div>
     </>
   );

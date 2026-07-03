@@ -10,15 +10,15 @@ export async function POST(req) {
   const user = await getAllowedUser();
   if (!user) return NextResponse.json({ error: 'Not authorized' }, { status: 401 });
 
-  let question = '';
-  try { question = String((await req.json()).question || '').slice(0, 1000).trim(); } catch {}
+  let question = '', scope = 'all';
+  try { const b = await req.json(); question = String(b.question || '').slice(0, 1000).trim(); scope = String(b.scope || 'all'); } catch {}
   if (!question) return NextResponse.json({ error: 'Ask a question.' }, { status: 400 });
 
   try {
     let answer;
     let sources = [];
     if (knowledgeAvailable()) {
-      const chunks = searchKnowledge(question, 6);
+      const chunks = searchKnowledge(question, 6, scope);
       if (chunks.length) {
         const context = chunks.map((c) => `[${c.source}]\n${c.text}`).join('\n\n---\n\n').slice(0, 9000);
         answer = await askWithContext(question, context);

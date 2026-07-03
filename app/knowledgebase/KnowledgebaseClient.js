@@ -1,9 +1,10 @@
 'use client';
 import { useState } from 'react';
 
-export default function KnowledgebaseClient() {
+export default function KnowledgebaseClient({ sources = [] }) {
   const [msgs, setMsgs] = useState([]);
   const [q, setQ] = useState('');
+  const [scope, setScope] = useState('all');
   const [busy, setBusy] = useState(false);
 
   async function ask(e) {
@@ -14,7 +15,7 @@ export default function KnowledgebaseClient() {
     setQ(''); setBusy(true);
     try {
       const r = await fetch('/api/knowledgebase/ask', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ question, scope }),
       });
       const j = await r.json();
       setMsgs((m) => [...m, { role: 'a', text: r.ok ? j.answer : '⚠ ' + (j.error || 'Error'), sources: j.sources || [] }]);
@@ -28,7 +29,7 @@ export default function KnowledgebaseClient() {
     <div className="kb-chat">
       <div className="kb-msgs">
         {msgs.length === 0 && (
-          <div className="hint">Ask anything from the text conversations — e.g. “What did we tell the 1330 Liberty applicants about pets?” or “Any parking questions at Manhattan?”</div>
+          <div className="hint">Pick the property (or Prospects) they’re asking about, then ask — e.g. “What did we tell them about parking?” It quotes the real messages with dates, weights Christian &amp; Glen, and flags anything over a year old.</div>
         )}
         {msgs.map((m, i) => (
           <div key={i} className={`kb-b ${m.role}`}>
@@ -41,6 +42,11 @@ export default function KnowledgebaseClient() {
         {busy && <div className="kb-b a">…</div>}
       </div>
       <form className="kb-in" onSubmit={ask}>
+        {sources.length > 0 && (
+          <select className="kb-scope" value={scope} onChange={(e) => setScope(e.target.value)}>
+            {sources.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+          </select>
+        )}
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ask the knowledgebase…" />
         <button className="btn primary" disabled={busy}>Ask</button>
       </form>

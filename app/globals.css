@@ -169,3 +169,4 @@ a{text-decoration:none;color:inherit;}
 .kb-in{display:flex;gap:8px;padding:12px;border-top:1px solid var(--g200);}
 .kb-in input{flex:1;border:1px solid var(--g200);border-radius:10px;padding:11px 13px;font-size:13.5px;outline:none;}
 .kb-src{margin-top:6px;font-size:10.5px;color:var(--g500);}
+.kb-scope{border:1px solid var(--g200);border-radius:10px;padding:0 8px;font-size:12.5px;background:#fff;max-width:180px;color:#334155;}
