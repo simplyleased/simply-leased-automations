@@ -21,7 +21,7 @@ export async function POST() {
     const rows = recon.rows.map((r) => [r.unit, r.resident, r.electric, r.water, r.serviceStart, r.serviceEnd, r.chargeDate, r.status]);
     const title = `Reconciliation — ${recon.summary.month || recon.csvFile} (review)`;
 
-    const sheet = await createReviewSheet(title, header, rows);
+    const sheet = await createReviewSheet(title, header, rows, 'Reconciliation');
 
     const audited = logEvent(user, 'utility_bills.create_review_sheet', {
       month: recon.summary.month, rows: rows.length,
