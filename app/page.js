@@ -1,6 +1,7 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
 import { getUserState, canManageFinancials } from '@/lib/user';
 import SystemStatus from '@/app/_components/SystemStatus';
+import { recentRuns } from '@/lib/runs';
 
 export default async function Home() {
   const s = await getUserState();
@@ -44,6 +45,7 @@ function DeniedScreen({ email }) {
 }
 
 function Dashboard({ privileged }) {
+  const runs = recentRuns();
   return (
     <>
       <div className="topbar">
@@ -67,17 +69,20 @@ function Dashboard({ privileged }) {
         <div className="section-h"><h2>System status</h2><span className="line"></span></div>
         <SystemStatus />
 
-        <div className="section-h"><h2>Today&rsquo;s automated runs</h2><span className="line"></span></div>
-        <div className="status-row">
-          <div className="stat"><div className="top"><span className="nm">Auto-responder</span><span className="dot ok"></span></div>
-            <div className="when">Last run 8:02 AM &middot; continuous</div><div className="msg ok">14 emails handled, 0 errors</div></div>
-          <div className="stat"><div className="top"><span className="nm">Application Daily Review</span><span className="dot ok"></span></div>
-            <div className="when">Last run 6:30 AM</div><div className="msg ok">9 applications reviewed</div></div>
-          <div className="stat"><div className="top"><span className="nm">Knowledgebase refresh</span><span className="dot ok"></span></div>
-            <div className="when">Last run 3:00 AM</div><div className="msg ok">Scripts synced &amp; up to date</div></div>
-          <div className="stat"><div className="top"><span className="nm">Summit Scan Checks</span><span className="dot warn"></span></div>
-            <div className="when">Last run 7:15 AM</div><div className="msg warn">2 items need your review</div></div>
-        </div>
+        <div className="section-h"><h2>Recent activity</h2><span className="line"></span></div>
+        {runs.length === 0 ? (
+          <div className="hint">No activity logged yet — runs will appear here as the team uses the automations.</div>
+        ) : (
+          <div className="status-row">
+            {runs.map((r) => (
+              <div className="stat" key={r.slug}>
+                <div className="top"><span className="nm">{r.title}</span><span className={`dot ${r.state}`}></span></div>
+                <div className="when">{new Date(r.ts).toLocaleString('en-US')}</div>
+                <div className={`msg ${r.state}`}>{r.state === 'err' ? 'Last run failed' : 'Ran successfully'}{r.email ? ` · ${r.email}` : ''}</div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="section-h"><h2>All automations</h2><span className="line"></span></div>
         <div className="grid">
