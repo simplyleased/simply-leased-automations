@@ -168,3 +168,4 @@ a{text-decoration:none;color:inherit;}
 .kb-b.a{align-self:flex-start;background:var(--g100);color:#1e293b;border-bottom-left-radius:4px;}
 .kb-in{display:flex;gap:8px;padding:12px;border-top:1px solid var(--g200);}
 .kb-in input{flex:1;border:1px solid var(--g200);border-radius:10px;padding:11px 13px;font-size:13.5px;outline:none;}
+.kb-src{margin-top:6px;font-size:10.5px;color:var(--g500);}
