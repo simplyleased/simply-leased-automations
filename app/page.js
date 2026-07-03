@@ -1,12 +1,12 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
-import { getUserState } from '@/lib/user';
+import { getUserState, canManageFinancials } from '@/lib/user';
 import SystemStatus from '@/app/_components/SystemStatus';
 
 export default async function Home() {
   const s = await getUserState();
   if (s.state === 'anon') return <LoginScreen />;
   if (s.state === 'denied') return <DeniedScreen email={s.email} />;
-  return <Dashboard />;
+  return <Dashboard privileged={canManageFinancials({ email: s.email })} />;
 }
 
 function LoginScreen() {
@@ -43,12 +43,13 @@ function DeniedScreen({ email }) {
   );
 }
 
-function Dashboard() {
+function Dashboard({ privileged }) {
   return (
     <>
       <div className="topbar">
         <div className="brand"><span className="logo">◧</span> Simply Leased Automations</div>
         <div className="user">
+          {privileged && <a className="actlink" href="/activity">Activity log</a>}
           <span className="gchip">Signed in with Google</span>
           <UserButton afterSignOutUrl="/" />
         </div>
