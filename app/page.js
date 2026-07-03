@@ -1,5 +1,6 @@
 import { SignInButton, SignOutButton, UserButton } from '@clerk/nextjs';
 import { getUserState } from '@/lib/user';
+import SystemStatus from '@/app/_components/SystemStatus';
 
 export default async function Home() {
   const s = await getUserState();
@@ -63,16 +64,7 @@ function Dashboard() {
         </div>
 
         <div className="section-h"><h2>System status</h2><span className="line"></span></div>
-        <div className="sysbar">
-          <div className="sysleft">
-            <div className="syshead"><span className="big-dot"></span> All systems operational</div>
-            <div className="sysdiv"></div>
-            <div className="sysconn"><span className="cd"></span><span className="nm">Claude AI</span><span className="st">Live</span></div>
-            <div className="sysconn"><span className="cd"></span><span className="nm">AppFolio</span><span className="st">Session valid</span></div>
-            <div className="sysconn"><span className="cd"></span><span className="nm">Google Workspace</span><span className="st">Connected</span></div>
-          </div>
-          <div className="recheck">Last checked 30s ago <button className="btn-rc">&#8635; Re-check now</button></div>
-        </div>
+        <SystemStatus />
 
         <div className="section-h"><h2>Today&rsquo;s automated runs</h2><span className="line"></span></div>
         <div className="status-row">

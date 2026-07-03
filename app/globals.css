@@ -40,6 +40,8 @@ a{text-decoration:none;color:inherit;}
 .sysdiv{width:1px;height:20px;background:var(--g200);}
 .sysconn{display:flex;align-items:center;gap:8px;font-size:12.7px;}
 .sysconn .cd{width:8px;height:8px;border-radius:50%;background:var(--green);}
+.sysconn .cd.warn{background:var(--amber);} .sysconn .cd.err{background:var(--red);}
+.big-dot.amber{background:var(--amber);box-shadow:0 0 0 4px #fef3c7;}
 .sysconn .nm{font-weight:600;color:#1e293b;}
 .sysconn .st{color:var(--g500);}
 .recheck{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--g500);}
