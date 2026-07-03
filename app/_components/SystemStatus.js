@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 
-const cls = (s) => (s === 'ok' ? 'ok' : s === 'warn' ? 'warn' : 'err');
+const cls = (s) => (s === 'ok' ? 'ok' : s === 'warn' ? 'warn' : s === 'offline' ? 'idle' : 'err');
 
 export default function SystemStatus() {
   const [data, setData] = useState(null);
@@ -20,8 +20,12 @@ export default function SystemStatus() {
   useEffect(() => { load(); }, [load]);
 
   const states = data ? [data.claude.state, data.google.state, data.appfolio.state] : [];
-  const allOk = data && states.every((s) => s === 'ok');
-  const overall = !data ? (loading ? 'Checking…' : 'Status unavailable') : allOk ? 'All systems operational' : 'Some integrations need attention';
+  const engineOffline = !!(data && data.engineOffline);
+  const allOk = data && !engineOffline && states.every((s) => s === 'ok');
+  const overall = !data
+    ? (loading ? 'Checking…' : 'Status unavailable')
+    : engineOffline ? 'Automations run on the office machine'
+    : allOk ? 'All systems operational' : 'Some integrations need attention';
   const when = data?.checkedAt ? new Date(data.checkedAt).toLocaleTimeString('en-US') : '';
 
   const Conn = ({ nm, c }) => (
@@ -31,7 +35,7 @@ export default function SystemStatus() {
   return (
     <div className="sysbar">
       <div className="sysleft">
-        <div className="syshead"><span className={`big-dot ${allOk ? '' : 'amber'}`}></span> {overall}</div>
+        <div className="syshead"><span className={`big-dot ${allOk ? '' : engineOffline ? 'idle' : 'amber'}`}></span> {overall}</div>
         <div className="sysdiv"></div>
         <Conn nm="Claude AI" c={data?.claude} />
         <Conn nm="AppFolio" c={data?.appfolio} />

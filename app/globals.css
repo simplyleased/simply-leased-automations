@@ -42,6 +42,8 @@ a{text-decoration:none;color:inherit;}
 .sysconn .cd{width:8px;height:8px;border-radius:50%;background:var(--green);}
 .sysconn .cd.warn{background:var(--amber);} .sysconn .cd.err{background:var(--red);}
 .big-dot.amber{background:var(--amber);box-shadow:0 0 0 4px #fef3c7;}
+.sysconn .cd.idle{background:#cbd5e1;}
+.big-dot.idle{background:#cbd5e1;box-shadow:0 0 0 4px #f1f5f9;}
 .actlink{font-size:13px;color:var(--indigo);font-weight:600;}
 .actlink:hover{text-decoration:underline;}
 .sysconn .nm{font-weight:600;color:#1e293b;}
